@@ -1,0 +1,17 @@
+{
+    "name": "CalTrack Lite",
+    "short_name": "CalTrack",
+    "description": "Premium glassmorphic calorie tracker for healthy living.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#6a11cb",
+    "icons": [
+        {
+            "src": "https://cdn-icons-png.flaticon.com/512/3075/3075977.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
