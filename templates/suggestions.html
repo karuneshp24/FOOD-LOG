@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<header>
+    <h1>What to Eat Today</h1>
+    <p class="motivation">Daily practical meal guide to keep you balanced</p>
+</header>
+
+<section class="suggestions-container">
+    {% for meal_type, items in suggestions.items() %}
+    <div class="suggestion-category glass category-{{ meal_type.lower() }}">
+        <h3>{{ meal_type }}</h3>
+        <div class="suggestion-grid">
+            {% for item in items %}
+            <div class="suggestion-card">
+                <div class="suggestion-icon">{{ item.icon }}</div>
+                <div class="suggestion-details">
+                    <h4>{{ item.name }}</h4>
+                    <span class="suggestion-calories">{{ item.calories }} kcal</span>
+                    <div class="type-tag type-{{ item.type.lower() }}">{{ item.type }}</div>
+                </div>
+                <form action="{{ url_for('add') }}" method="POST">
+                    <input type="hidden" name="name" value="{{ item.name }}">
+                    <input type="hidden" name="calories" value="{{ item.calories }}">
+                    <input type="hidden" name="meal_type" value="{{ meal_type if meal_type != 'Snacks' else 'Snack' }}">
+                    <input type="hidden" name="is_suggestion" value="1">
+                    <button type="submit" class="btn-add" title="Add to Log">+</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</section>
+{% endblock %}

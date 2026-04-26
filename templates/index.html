@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<header>
+    <h1>{{ greeting }}</h1>
+    <p class="motivation">{{ message }}</p>
+</header>
+
+<section class="dashboard">
+    <div class="progress-container">
+        <div class="progress-circle" style="--progress: {{ progress }}%;">
+            <div class="progress-inner">
+                <h2>{{ total_calories }}</h2>
+                <p>kcal</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-container glass">
+        <form action="{{ url_for('add') }}" method="POST">
+            <input type="text" name="name" placeholder="What did you eat?" required autocomplete="off">
+            <input type="number" name="calories" placeholder="Calories" required min="1" max="10000">
+            <select name="meal_type" required>
+                <option value="" disabled selected>Select Meal Type</option>
+                <option value="Breakfast">🍳 Breakfast</option>
+                <option value="Lunch">🥗 Lunch</option>
+                <option value="Dinner">🍛 Dinner</option>
+                <option value="Snack">🍎 Snack</option>
+            </select>
+            <button type="submit" class="btn-primary">Add Entry</button>
+        </form>
+    </div>
+</section>
+
+<section class="entries">
+    <div class="entries-header">
+        <h3>Today's Log</h3>
+        {% if entries %}
+        <form action="{{ url_for('clear') }}" method="POST"
+            onsubmit="return confirm('Are you sure you want to clear all entries for today?');">
+            <button type="submit" class="btn-danger">Clear All</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <div class="entry-list">
+        {% for entry in entries %}
+        <div class="entry-card glass">
+            <div class="entry-icon">{{ meal_icons[entry.meal_type] }}</div>
+            <div class="entry-details">
+                <h4>{{ entry.name }}</h4>
+                <span class="meal-tag {{ entry.meal_type.lower() }}">{{ entry.meal_type }}</span>
+            </div>
+            <div class="entry-calories">
+                <strong>{{ entry.calories }}</strong> kcal
+            </div>
+            <form action="{{ url_for('delete', id=entry.id) }}" method="POST">
+                <button type="submit" class="btn-delete" title="Delete entry">✕</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="empty-state glass">
+            <p>No entries yet today. Start tracking!</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

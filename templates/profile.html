@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+<header>
+    <h1>My Profile</h1>
+    <p class="motivation">Manage your settings and view your history</p>
+</header>
+
+<section class="profile-container">
+    <div class="profile-card glass">
+        <h3>Account Settings</h3>
+        <form action="{{ url_for('profile') }}" method="POST" class="profile-form">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" value="{{ g.user.username }}" required>
+            
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ g.user.email }}" required>
+            
+            <label for="daily_limit">Daily Calorie Goal</label>
+            <input type="number" id="daily_limit" name="daily_limit" value="{{ g.user.daily_limit }}" required min="500" max="10000">
+            
+            <button type="submit" class="btn-primary">Update Profile</button>
+        </form>
+    </div>
+
+    <div class="history-card glass">
+        <h3>Daily Food History</h3>
+        {% if history %}
+            <div class="history-list">
+                {% for row in history %}
+                <div class="history-item">
+                    <div class="history-date">{{ row.date }}</div>
+                    <div class="history-calories"><strong>{{ row.daily_total }}</strong> kcal</div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-state">No logging history found.</p>
+        {% endif %}
+    </div>
+
+    <div class="history-card glass">
+        <h3>Meals Selected from Suggestions</h3>
+        {% if suggested_meals %}
+            <div class="history-list">
+                {% for row in suggested_meals %}
+                <div class="history-item">
+                    <div class="history-date">{{ row.name }} <span class="meal-tag {{ row.meal_type.lower() }}">{{ row.meal_type }}</span></div>
+                    <div class="history-calories"><strong>{{ row.calories }}</strong> kcal <br><small>{{ row.date }}</small></div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-state">You haven't added any meals from the suggestions yet.</p>
+        {% endif %}
+    </div>
+    <div class="qr-card glass">
+        <h3>📱 Connect Mobile Device</h3>
+        <p>Scan this QR code with your phone to access CalTrack Lite on the go. Make sure your phone is on the same WiFi network!</p>
+        
+        <div class="qr-container">
+            <img src="{{ url_for('qr_code') }}" alt="Access QR Code" class="qr-image">
+            <div class="qr-info">
+                <p><strong>URL:</strong> {{ local_url }}</p>
+                <p class="network-hint">Network IP: {{ local_ip }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
